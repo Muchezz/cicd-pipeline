@@ -663,9 +663,12 @@ jobs:
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
             
-            export ANSIBLE_HOST_KEY_CHECKING=False
+            
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
+
+
+      
 workflows:
   default:
     jobs:
