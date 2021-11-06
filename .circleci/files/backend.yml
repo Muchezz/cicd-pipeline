@@ -48,10 +48,16 @@
 
 Description: >
   UdaPeople backend stack.
+# Parameters:
+#   ID:
+#     Description: Unique identifier.
+#     Type: String
+
 Parameters:
-  ID:
-    Description: Unique identifier.
-    Type: String
+   ID:
+     Description: Unique identifier.
+     Type: String
+     Default: ${CIRCLE_WORKFLOW_ID:0:5}
 
 Resources:
   InstanceSecurityGroup:
@@ -76,7 +82,7 @@ Resources:
       SecurityGroups:
         - Ref: InstanceSecurityGroup
       KeyName: udacity 
-      ImageId: ami-0f387434d1dfc4cc2 # ami-03d5c68bab01f3496 
+      ImageId: ami-080dec6cd31e0c89f
       Tags:
         - Key: Name
           Value: !Sub backend-${ID}
