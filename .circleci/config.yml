@@ -355,7 +355,7 @@ jobs:
           paths:
             - project/.circleci/ansible/inventory.txt    
       # Here's where you will add some code to rollback on failure
-      # - destroy-environment
+      - destroy-environment
 
   configure-infrastructure:
     docker:
@@ -363,7 +363,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: ['70:db:b5:7b:0f:2a:43:38:30:18:ed:9a:41:5b:03:d5']
+          fingerprints: [68:7d:fb:ac:a9:a2:56:f5:21:a3:38:d6:bd:ce:09:b9]
       - attach_workspace:
           at: ~/
           
@@ -372,7 +372,7 @@ jobs:
           command: |
             apk add --update ansible openssh-client tar gzip curl nodejs npm
             pip install awscli
-            cat .circleci/ansible/inventory.txt
+            
       - run:
           name: Configure server
           command: |
