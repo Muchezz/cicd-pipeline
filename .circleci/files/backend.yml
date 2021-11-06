@@ -81,7 +81,7 @@ Resources:
       InstanceType: t2.micro
       SecurityGroups:
         - Ref: InstanceSecurityGroup
-      
+      KeyName: greentropikal
       ImageId: ami-01cc34ab2709337aa
       Tags:
         - Key: Name
