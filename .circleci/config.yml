@@ -159,6 +159,7 @@ jobs:
           command: |
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:5}" \
             --output text >> ~/project/.circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
 
@@ -251,7 +252,7 @@ jobs:
 
   deploy-frontend:
     docker:
-      - image: circleci/node:13.8.0 # Docker image here that supports AWS CLI
+      - image: python:3.7-alpine3.11 # Docker image here that supports AWS CLI
     steps:
       - checkout
       - attach_workspace:
@@ -259,7 +260,6 @@ jobs:
           
       - run:
           name: Install AWS CLI dependencies
-          working_directory: /tmp
           command: |
             apk add --update tar gzip ansible nodejs npm curl
             pip install awscli
@@ -274,7 +274,7 @@ jobs:
             
             BACKEND_IP=$(aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:project,Values=backend-${CIRCLE_WORKFLOW_ID:0:5}" ) 
+              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:5}" ) 
 
             export API_URL="${BACKEND_IP}:3030"
             
@@ -310,11 +310,7 @@ jobs:
       # attach workspace
       - attach_workspace:
           at: ~/
-          
-      - attach_workspace:
-          at: /tmp/workspace
-      - restore_cache:
-          keys: [backend-build]
+      
       - run:
           name: Install dependencies
           command: |
@@ -370,9 +366,9 @@ jobs:
           command: |
             #Fetch and prepare the BACKEND_IP env var 
             BACKEND_IP=$(aws ec2 describe-instances \
-              --filters "Name=tag:project,Values=backend-${CIRCLE_WORKFLOW_ID:0:5}" \
+              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:5}" \
               --query "Reservations[*].Instances[0].PublicIpAddress")    
-                      
+
             export API_URL="http://${BACKEND_IP}:3030"
             echo ${API_URL}
 
